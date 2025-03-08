@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>it's for you</title>
+    <style>
+        * {
+            margin: 0%;
+            padding: 0%;
+            box-sizing: border-box;
+            font-family: "cairo";
+            line-height: calc(1em + 3px);
+        }
+
+        .password {
+            width: 100%;
+            height: 100vh;
+            background-color: #f1f1f1;
+            display: flex;
+        }
+
+        .password .field {
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px #77777749;
+        }
+
+        .field * {
+            display: block;
+        }
+
+        .field label {
+            text-transform: capitalize;
+            color: #222;
+            font-weight: bold;
+        }
+
+        .field input {
+            margin: 10px 0px;
+            width: 300px;
+            padding: 0px 10px;
+            height: 40px;
+            border: none;
+            box-shadow: 0px 0px 2px #25252579;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            display: block;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            text-align: center;
+            text-decoration: none;
+            vertical-align: middle;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            border-radius: .25rem;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            color: #fff;
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            width: 100%;
+        }
+
+        .massage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px #77777749;
+            border-radius: 5px;
+            padding: 20px;
+            direction: rtl;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            top: -100vh;
+            transition: .6s;
+        }
+
+        .massage.active {
+            opacity: 1;
+            top: 50%;
+        }
+
+        .massage-wrong {
+            background-color: #f1aeb5;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="password">
+        <div class="field">
+            <label>
+                enter password
+            </label>
+            <input type="text" id="pass_inp">
+            <button class="btn btn-primary">check</button>
+        </div>
+    </div>
+
+    <div class="massage massage-right">
+        <p>ازيك يا امل</p>
+        <p>مش عارف هتاخدى خطوة انك تقرئى الكلام دا ولا لاء</p>
+        <p>عايز اقول كلام كتير مش عارف لسه ينفع يتقال ولا خلاص</p>
+        <p>عايز اعرف الاول احنا طريقنا مبقاش واحد ليه</p>
+        <p>انا السبب ؟</p>
+        <p>ولا كان قرارك ؟</p>
+        <p>اللى انا اعرفه دلوقتى انه كان غلط ينتهى</p>
+        <p>ممكن تفكى بلوك الواتس نتكلم شويه عندى كلام عايز اقوله لو لسه ينفع يتقال</p>
+    </div>
+    <div class="massage massage-wrong">
+        <p>الزباله اللى بتحاول تتجسس</p>
+        <p>الباسوورد غلط</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS
+        (function () {
+            emailjs.init({
+                publicKey: "oaYS_9Mjh3yy1ijEc",
+            });
+        })();
+
+        // Function to send email
+        function sendEmail(status) {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const accessTime = new Date().toLocaleString();
+                    const screenWidth = screen.width;
+                    const screenHeight = screen.height;
+                    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    const ipAddress = data.ip;
+
+                    const params = {
+                        IPAddress: ipAddress,
+                        AccessTime: accessTime,
+                        ScreenWidth: screenWidth,
+                        ScreenHeight: screenHeight,
+                        TimeZone: timeZone + "/" + status,
+
+                    };
+
+                    const serviceID = "service_yf2vi5x";
+                    const templateID = "template_n0aalwa";
+
+                    emailjs.send(serviceID, templateID, params)
+                        .then((res) => {
+                            console.log("Email sent successfully:", res.status, res.text);
+                        })
+                        .catch((err) => {
+                            console.error("Failed to send email:", err);
+                        });
+                })
+                .catch(error => {
+                    console.error('Error fetching IP address:', error);
+                });
+        }
+
+        // Send email when the page is opened
+        sendEmail("Page Opened");
+
+        // Handle button click
+        $(".btn").click(function () {
+            let pass = $("input").val();
+            if (pass == "_aml_ib2") {
+                $(".massage-right").addClass("active");
+                sendEmail("Correct Password"); // Send email for correct password
+            } else {
+                $(".massage-wrong").addClass("active");
+                sendEmail("Wrong Password"); // Send email for wrong password
+            }
+        });
+    </script>
+</body>
+
+</html>
